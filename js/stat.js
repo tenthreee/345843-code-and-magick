@@ -2,7 +2,6 @@
 
 window.renderStatistics = function (ctx, names, times) {
   // Рисую тень облачку
-
   ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
   ctx.beginPath();
   ctx.moveTo(120, 280);
@@ -18,7 +17,6 @@ window.renderStatistics = function (ctx, names, times) {
   ctx.fill();
 
   // Рисую облачко
-
   ctx.fillStyle = 'white';
   ctx.beginPath();
   ctx.moveTo(110, 270);
@@ -34,14 +32,12 @@ window.renderStatistics = function (ctx, names, times) {
   ctx.fill();
 
   // Пишу словечки
-
   ctx.fillStyle = 'black';
   ctx.font = '16px PT Mono';
   ctx.fillText('Ура вы победили!', 270, 50);
   ctx.fillText('Список результатов:', 255, 70);
 
   // Вычисляю слоупока
-
   var maxTime = -1; // Почему -1, а не 0?
 
   for (var i = 0; i < times.length; i++) {
@@ -52,14 +48,12 @@ window.renderStatistics = function (ctx, names, times) {
   }
 
   // Рандомизирую цвет
-
   var randomColor = function () {
     var opacity = Math.random().toFixed(1);
     return 'rgba(0, 0, 255, ' + opacity + ')';
   };
 
   // Рисую графики
-
   var histoHeight = 100;
   var histoIndex = histoHeight / maxTime;
   var histoWidth = 40;
