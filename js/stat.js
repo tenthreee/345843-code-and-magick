@@ -1,35 +1,62 @@
 'use strict';
 
-window.renderStatistics = function (ctx, names, times) {
-  // Рисую тень облачку
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-  ctx.beginPath();
-  ctx.moveTo(120, 280);
-  ctx.quadraticCurveTo(110, 280, 110, 270);
-  ctx.quadraticCurveTo(110, 110, 160, 110);
-  ctx.quadraticCurveTo(110, 110, 160, 110);
-  ctx.quadraticCurveTo(160, 35, 210, 35);
-  ctx.quadraticCurveTo(360, 30, 510, 35);
-  ctx.quadraticCurveTo(560, 35, 560, 110);
-  ctx.quadraticCurveTo(610, 110, 610, 270);
-  ctx.quadraticCurveTo(610, 280, 600, 280);
-  ctx.closePath();
-  ctx.fill();
+// Пишу функцию поиска масксимального элемента в массиве
+// Вроде работает, но старую версию пока очкую стирать
+var countMaxElem = function (elems) {
+  var maxElem = elems[0];
 
-  // Рисую облачко
-  ctx.fillStyle = 'white';
-  ctx.beginPath();
-  ctx.moveTo(110, 270);
-  ctx.quadraticCurveTo(100, 270, 100, 260);
-  ctx.quadraticCurveTo(100, 100, 150, 100);
-  ctx.quadraticCurveTo(100, 100, 150, 100);
-  ctx.quadraticCurveTo(150, 25, 200, 25);
-  ctx.quadraticCurveTo(350, 20, 500, 25);
-  ctx.quadraticCurveTo(550, 25, 550, 100);
-  ctx.quadraticCurveTo(600, 100, 600, 260);
-  ctx.quadraticCurveTo(600, 270, 590, 270);
-  ctx.closePath();
-  ctx.fill();
+  for (var i = 0; i < elems.length; i++) {
+    var elem = elems[i];
+    if (elem > maxElem) {
+      maxElem = elem;
+    }
+  }
+  return maxElem;
+};
+
+
+// Это потом приберу, если выше всё ок
+// var countMaxElem = function (elems) {
+//   var maxElem = -1;
+//
+//   for (var i = 0; i < elems.length; i++) {
+//     var elem = elems[i];
+//     if (elem > maxElem) {
+//       maxElem = elem;
+//     }
+//   }
+//   return maxElem;
+// };
+
+
+// Пишу функцию рандомизации цвета
+// Немного поправила её, так так иногда генерились прозрачные колонки
+var randomizeColor = function () {
+  var opacity = Math.random(0.1, 0.9).toFixed(1);
+  return 'rgba(0, 0, 255, ' + opacity + ')';
+};
+
+window.renderStatistics = function (ctx, names, times) {
+  // Пишу функцию рисования облачка
+  var drawCloud = function (x, y, color) {
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.quadraticCurveTo(x - 10, y, x - 10, y - 10);
+    ctx.quadraticCurveTo(x - 10, y - 170, x + 40, y - 170);
+    ctx.quadraticCurveTo(x - 10, y - 170, x + 40, y - 170);
+    ctx.quadraticCurveTo(x + 40, y - 245, x + 90, y - 245);
+    ctx.quadraticCurveTo(x + 240, y - 250, x + 390, y - 245);
+    ctx.quadraticCurveTo(x + 440, y - 245, x + 440, y - 170);
+    ctx.quadraticCurveTo(x + 490, y - 170, x + 490, y - 10);
+    ctx.quadraticCurveTo(x + 490, y, x + 480, y);
+    ctx.closePath();
+    ctx.fill();
+  };
+
+  // Рисую облачко с тенью
+  drawCloud(120, 280, 'rgba(0, 0, 0, 0.7)');
+  drawCloud(110, 270, 'white');
 
   // Пишу словечки
   ctx.fillStyle = 'black';
@@ -38,46 +65,28 @@ window.renderStatistics = function (ctx, names, times) {
   ctx.fillText('Список результатов:', 255, 70);
 
   // Вычисляю слоупока
-  var maxTime = -1; // Почему -1, а не 0?
-
-  for (var i = 0; i < times.length; i++) {
-    var time = times[i];
-    if (time > maxTime) {
-      maxTime = time;
-    }
-  }
-
-  // Рандомизирую цвет
-  var randomColor = function () {
-    var opacity = Math.random().toFixed(1);
-    return 'rgba(0, 0, 255, ' + opacity + ')';
-  };
+  var maxTime = countMaxElem(times);
 
   // Рисую графики
-  var histoHeight = 100;
-  var histoIndex = histoHeight / maxTime;
-  var histoWidth = 40;
-  var histoMargin = histoWidth + 50;
   var startX = 190;
   var startY = 230;
+  var histoHeight = 100;
+  var histoWidth = 40;
+  var histoMargin = histoWidth + 50;
+  var histoIndex = histoHeight / maxTime;
 
-  for (var j = 0; j < times.length; j++) {
-    var score = Math.round(times[j]);
-    var histoLevel = times[j] * histoIndex;
-    var pointX = startX + histoMargin * j;
+  for (var i = 0; i < times.length; i++) {
+    var score = Math.round(times[i]);
+    var histoLevel = times[i] * histoIndex;
+    var pointX = startX + histoMargin * i;
     var namesPointY = startY + 20;
     var timesPointY = startY - histoLevel - 10;
+    var currentPlayer = 'Вы';
 
     ctx.fillStyle = 'black';
     ctx.fillText(score, pointX, timesPointY);
-    ctx.fillText(names[j], pointX, namesPointY);
-
-    if (names[j] === 'Вы') {
-      ctx.fillStyle = 'rgba(255, 0, 0, 1)';
-      ctx.fillRect(pointX, startY, histoWidth, -histoLevel);
-    } else {
-      ctx.fillStyle = randomColor();
-      ctx.fillRect(pointX, startY, histoWidth, -histoLevel);
-    }
+    ctx.fillText(names[i], pointX, namesPointY);
+    ctx.fillStyle = names[i] === currentPlayer ? 'rgba(255, 0, 0, 1)' : randomizeColor();
+    ctx.fillRect(pointX, startY, histoWidth, -histoLevel);
   }
 };
