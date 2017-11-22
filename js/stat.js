@@ -1,5 +1,12 @@
 'use strict';
 
+var CURRENT_PLAYER = 'Вы';
+var START_X = 190;
+var START_Y = 230;
+var HISTO_HEIGHT = 100;
+var HISTO_WIDTH = 40;
+var HISTO_MARGIN = HISTO_WIDTH + 50;
+
 // Пишу функцию поиска масксимального элемента в массиве
 var getMaxElem = function (elems) {
   var maxElem = elems[0];
@@ -13,10 +20,14 @@ var getMaxElem = function (elems) {
   return maxElem;
 };
 
+// Пишу функцию поиска случайного числа
+var getRandomNumber = function (min, max) {
+  return (Math.random() * (max - min) + min).toFixed(1);
+};
+
 // Пишу функцию рандомизации цвета
 var getRandomColor = function (min, max) {
-  var opacity = (Math.random() * (max - min) + min).toFixed(1);
-  return 'rgba(0, 0, 255, ' + opacity + ')';
+  return 'rgba(0, 0, 255, ' + getRandomNumber(min, max) + ')';
 };
 
 // Пишу функцию рисования облачка
@@ -51,25 +62,19 @@ window.renderStatistics = function (ctx, names, times) {
   var maxTime = getMaxElem(times);
 
   // Рисую графики
-  var startX = 190;
-  var startY = 230;
-  var histoHeight = 100;
-  var histoWidth = 40;
-  var histoMargin = histoWidth + 50;
-  var histoIndex = histoHeight / maxTime;
+  var histoIndex = HISTO_HEIGHT / maxTime;
 
   for (var i = 0; i < times.length; i++) {
-    var CURRENT_PLAYER = 'Вы';
     var score = Math.round(times[i]);
     var histoLevel = times[i] * histoIndex;
-    var pointX = startX + histoMargin * i;
-    var namesPointY = startY + 20;
-    var timesPointY = startY - histoLevel - 10;
+    var pointX = START_X + HISTO_MARGIN * i;
+    var namesPointY = START_Y + 20;
+    var timesPointY = START_Y - histoLevel - 10;
 
     ctx.fillStyle = 'black';
     ctx.fillText(score, pointX, timesPointY);
     ctx.fillText(names[i], pointX, namesPointY);
     ctx.fillStyle = names[i] === CURRENT_PLAYER ? 'rgba(255, 0, 0, 1)' : getRandomColor(0.1, 1);
-    ctx.fillRect(pointX, startY, histoWidth, -histoLevel);
+    ctx.fillRect(pointX, START_Y, HISTO_WIDTH, -histoLevel);
   }
 };
