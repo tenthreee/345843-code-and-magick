@@ -1,8 +1,8 @@
 'use strict';
 
-var WIZARDS_QUANTITY = 4;
+var WIZARDS_NUMBER = 4;
 
-var WIZARD_NAMES = [
+var WIZARDS_NAMES = [
   'Иван',
   'Хуан Себастьян',
   'Мария',
@@ -13,7 +13,7 @@ var WIZARD_NAMES = [
   'Вашингтон'
 ];
 
-var WIZARD_SURNAMES = [
+var WIZARDS_SURNAMES = [
   'да Марья',
   'Верон',
   'Мирабелла',
@@ -24,7 +24,7 @@ var WIZARD_SURNAMES = [
   'Ирвинг'
 ];
 
-var WIZARD_COATS = [
+var WIZARDS_COATS_COLORS = [
   'rgb(101, 137, 164)',
   'rgb(241, 43, 107)',
   'rgb(146, 100, 161)',
@@ -33,7 +33,7 @@ var WIZARD_COATS = [
   'rgb(0, 0, 0)'
 ];
 
-var WIZARD_EYES = [
+var WIZARDS_EYES_COLORS = [
   'black',
   'red',
   'blue',
@@ -41,13 +41,12 @@ var WIZARD_EYES = [
   'green'
 ];
 
-var similarWizardTemplate = document.querySelector('#similar-wizard-template');
+var similarWizardTemplate = document.querySelector('#similar-wizard-template').content;
 var setupSimilarList = document.querySelector('.setup-similar-list');
-var fragment = document.createDocumentFragment();
 var wizards = [];
 
-var renderWizard = function (wizard) {
-  var wizardElement = similarWizardTemplate.content.cloneNode(true);
+var getWizard = function (wizard) {
+  var wizardElement = similarWizardTemplate.cloneNode(true);
 
   wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
   wizardElement.querySelector('.wizard-coat').style.fill = wizard.coatColor;
@@ -56,39 +55,42 @@ var renderWizard = function (wizard) {
   return wizardElement;
 };
 
-var shuffle = function (array) {
-  var currentIndex = array.length;
-  var temporaryValue;
-  var randomIndex;
+var shuffle = function (numbers, index) {
+  var randomIndex = Math.floor(Math.random() * index);
+  var temporaryValue = numbers[index];
+  numbers[index] = numbers[randomIndex];
+  numbers[randomIndex] = temporaryValue;
+};
 
-  while (currentIndex !== 0) {
-
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
+var shuffleArray = function (array) {
+  for (var i = 0; i < array.length; i++) {
+    shuffle(array, i);
   }
 
   return array;
 };
 
-var shuffleNames = shuffle(WIZARD_NAMES);
-var shuffleSurnames = shuffle(WIZARD_SURNAMES);
-var shuffleCoats = shuffle(WIZARD_COATS);
-var shuffleEyes = shuffle(WIZARD_EYES);
+// Если фрагмент внутрь функции положить, там внизу setupSimilarList.appendChild его не видит
+var fragment = document.createDocumentFragment();
 
-for (var i = 0; i < WIZARDS_QUANTITY; i++) {
-  var wizardObj = {
-    name: shuffleNames[i] + ' ' + shuffleSurnames[i],
-    coatColor: shuffleCoats[i],
-    eyesColor: shuffleEyes[i]
-  };
+var createArray = function (array) {
+  var shuffledNames = shuffleArray(WIZARDS_NAMES);
+  var shuffledSurnames = shuffleArray(WIZARDS_SURNAMES);
+  var shuffledCoats = shuffleArray(WIZARDS_COATS_COLORS);
+  var shuffledEyes = shuffleArray(WIZARDS_EYES_COLORS);
 
-  wizards[i] = wizardObj;
-  fragment.appendChild(renderWizard(wizards[i]));
-}
+  for (var i = 0; i < WIZARDS_NUMBER; i++) {
+    array[i] = {
+      name: shuffledNames[i] + ' ' + shuffledSurnames[i],
+      coatColor: shuffledCoats[i],
+      eyesColor: shuffledEyes[i]
+    };
+
+    fragment.appendChild(getWizard(array[i]));
+  }
+};
+
+createArray(wizards);
 
 setupSimilarList.appendChild(fragment);
 document.querySelector('.setup').classList.remove('hidden');
