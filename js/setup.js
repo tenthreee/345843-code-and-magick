@@ -45,6 +45,24 @@ var similarWizardTemplate = document.querySelector('#similar-wizard-template').c
 var setupSimilarList = document.querySelector('.setup-similar-list');
 var wizards = [];
 
+// Делаю рокировочку
+var swapElements = function (array, index1, index2) {
+  var temporaryValue = array[index1];
+  array[index1] = array[index2];
+  array[index2] = temporaryValue;
+};
+
+// Перемешиваю массив
+var shuffleArray = function (array) {
+  for (var i = 0; i < array.length; i++) {
+    var randomIndex = Math.floor(Math.random() * i);
+    swapElements(array, i, randomIndex);
+  }
+
+  return array;
+};
+
+// Создаю болванку для волшебника
 var getWizard = function (wizard) {
   var wizardElement = similarWizardTemplate.cloneNode(true);
 
@@ -55,21 +73,7 @@ var getWizard = function (wizard) {
   return wizardElement;
 };
 
-var swapElements = function (array, index1, index2) {
-  var temporaryValue = array[index1];
-  array[index1] = array[index2];
-  array[index2] = temporaryValue;
-};
-
-var shuffleArray = function (array) {
-  for (var i = 0; i < array.length; i++) {
-    var randomIndex = Math.floor(Math.random() * i);
-    swapElements(array, i, randomIndex);
-  }
-
-  return array;
-};
-
+// Создаю волшебников
 var createWizards = function (array) {
   var shuffledNames = shuffleArray(WIZARDS_NAMES);
   var shuffledSurnames = shuffleArray(WIZARDS_SURNAMES);
@@ -83,9 +87,12 @@ var createWizards = function (array) {
       eyesColor: shuffledEyes[i]
     };
   }
+
+  return array; // Я правильно поняла, что здесь только ретёрна не хватает? :\
 };
 
-var renderWizzards = function (array) {
+// Рисую волшебников
+var renderWizards = function (array) {
   var fragment = document.createDocumentFragment();
 
   for (var i = 0; i < array.length; i++) {
@@ -96,7 +103,7 @@ var renderWizzards = function (array) {
 };
 
 createWizards(wizards);
-renderWizzards(wizards);
+renderWizards(wizards);
 
 document.querySelector('.setup').classList.remove('hidden');
 document.querySelector('.setup-similar').classList.remove('hidden');
