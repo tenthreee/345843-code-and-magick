@@ -55,25 +55,22 @@ var getWizard = function (wizard) {
   return wizardElement;
 };
 
-var shuffle = function (numbers, index) {
-  var randomIndex = Math.floor(Math.random() * index);
-  var temporaryValue = numbers[index];
-  numbers[index] = numbers[randomIndex];
-  numbers[randomIndex] = temporaryValue;
+var swapElements = function (array, index1, index2) {
+  var temporaryValue = array[index1];
+  array[index1] = array[index2];
+  array[index2] = temporaryValue;
 };
 
 var shuffleArray = function (array) {
   for (var i = 0; i < array.length; i++) {
-    shuffle(array, i);
+    var randomIndex = Math.floor(Math.random() * i);
+    swapElements(array, i, randomIndex);
   }
 
   return array;
 };
 
-// Если фрагмент внутрь функции положить, там внизу setupSimilarList.appendChild его не видит
-var fragment = document.createDocumentFragment();
-
-var createArray = function (array) {
+var createWizards = function (array) {
   var shuffledNames = shuffleArray(WIZARDS_NAMES);
   var shuffledSurnames = shuffleArray(WIZARDS_SURNAMES);
   var shuffledCoats = shuffleArray(WIZARDS_COATS_COLORS);
@@ -85,13 +82,21 @@ var createArray = function (array) {
       coatColor: shuffledCoats[i],
       eyesColor: shuffledEyes[i]
     };
-
-    fragment.appendChild(getWizard(array[i]));
   }
 };
 
-createArray(wizards);
+var renderWizzards = function (array) {
+  var fragment = document.createDocumentFragment();
 
-setupSimilarList.appendChild(fragment);
+  for (var i = 0; i < array.length; i++) {
+    fragment.appendChild(getWizard(array[i]));
+  }
+
+  setupSimilarList.appendChild(fragment);
+};
+
+createWizards(wizards);
+renderWizzards(wizards);
+
 document.querySelector('.setup').classList.remove('hidden');
 document.querySelector('.setup-similar').classList.remove('hidden');
