@@ -43,7 +43,6 @@ var WIZARDS_EYES_COLORS = [
 
 var similarWizardTemplate = document.querySelector('#similar-wizard-template').content;
 var setupSimilarList = document.querySelector('.setup-similar-list');
-var wizards = [];
 
 // Делаю рокировочку
 var swapElements = function (array, index1, index2) {
