@@ -74,11 +74,12 @@ var getWizard = function (wizard) {
 };
 
 // Создаю волшебников
-var createWizards = function (array) {
+var createWizards = function () {
   var shuffledNames = shuffleArray(WIZARDS_NAMES);
   var shuffledSurnames = shuffleArray(WIZARDS_SURNAMES);
   var shuffledCoats = shuffleArray(WIZARDS_COATS_COLORS);
   var shuffledEyes = shuffleArray(WIZARDS_EYES_COLORS);
+  var array = [];
 
   for (var i = 0; i < WIZARDS_NUMBER; i++) {
     array[i] = {
@@ -88,7 +89,7 @@ var createWizards = function (array) {
     };
   }
 
-  return array; // Я правильно поняла, что здесь только ретёрна не хватает? :\
+  return array;
 };
 
 // Рисую волшебников
@@ -102,8 +103,7 @@ var renderWizards = function (array) {
   setupSimilarList.appendChild(fragment);
 };
 
-createWizards(wizards);
-renderWizards(wizards);
+renderWizards(createWizards());
 
 document.querySelector('.setup').classList.remove('hidden');
 document.querySelector('.setup-similar').classList.remove('hidden');
