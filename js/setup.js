@@ -1,5 +1,7 @@
 'use strict';
 
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
 var WIZARDS_NUMBER = 4;
 
 var WIZARDS_NAMES = [
@@ -41,8 +43,21 @@ var WIZARDS_EYES_COLORS = [
   'green'
 ];
 
+var FIREBALL_COLORS = [
+  '#ee4830',
+  '#30a8ee',
+  '#5ce6c0',
+  '#e848d5',
+  '#e6e848'
+];
+
 var similarWizardTemplate = document.querySelector('#similar-wizard-template').content;
 var setupSimilarList = document.querySelector('.setup-similar-list');
+
+// Получаю случайное число
+var getRandomNumber = function (min, max) {
+  return Math.floor(Math.random() * (max - min) + min);
+};
 
 // Делаю рокировочку
 var swapElements = function (array, index1, index2) {
@@ -104,5 +119,71 @@ var renderWizards = function (array) {
 
 renderWizards(createWizards());
 
-document.querySelector('.setup').classList.remove('hidden');
-document.querySelector('.setup-similar').classList.remove('hidden');
+// document.querySelector('.setup').classList.remove('hidden');
+// document.querySelector('.setup-similar').classList.remove('hidden');
+
+
+// Начинаю выполнять задание #12 Учебный проект: одеть Надежду
+var setup = document.querySelector('.setup');
+var setupOpen = document.querySelector('.setup-open');
+var setupClose = document.querySelector('.setup-close');
+var setupWizard = document.querySelector('.setup-wizard');
+var wizardCoat = setupWizard.querySelector('.wizard-coat');
+var wizardEyes = setupWizard.querySelector('.wizard-eyes');
+var setupFireballWrap = document.querySelector('.setup-fireball-wrap');
+
+// Открываю попап с настройками
+var onSetupClick = function () {
+  setup.classList.remove('hidden');
+};
+
+var onSetupKeydown = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    setup.classList.remove('hidden');
+  }
+};
+
+// Закрываю попап с настройками
+var onSetupCloseClick = function () {
+  setup.classList.add('hidden');
+};
+
+var onSetupCloseKeydown = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    setup.classList.add('hidden');
+  }
+};
+
+var onSetupEscKeydown = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    setup.classList.add('hidden');
+  }
+};
+
+// Меняю цвет мантии по клику
+var onWizardCoatClick = function () {
+  var randomColorIndex = getRandomNumber(0, WIZARDS_COATS_COLORS.length);
+  wizardCoat.style.fill = WIZARDS_COATS_COLORS[randomColorIndex];
+};
+
+// Меняю цвет глаз по клику
+var onWizardEyesClick = function () {
+  var randomColorIndex = getRandomNumber(0, WIZARDS_EYES_COLORS.length);
+  wizardEyes.style.fill = WIZARDS_EYES_COLORS[randomColorIndex];
+};
+
+// Меняю цвет фаербола по клику
+var onSetupFireballWrap = function () {
+  var randomColorIndex = getRandomNumber(0, FIREBALL_COLORS.length);
+  setupFireballWrap.style.background = FIREBALL_COLORS[randomColorIndex];
+};
+
+document.addEventListener('keydown', onSetupEscKeydown);
+setupOpen.addEventListener('click', onSetupClick);
+setupOpen.addEventListener('keydown', onSetupKeydown);
+setupClose.addEventListener('click', onSetupCloseClick);
+setupClose.addEventListener('keydown', onSetupCloseKeydown);
+
+wizardCoat.addEventListener('click', onWizardCoatClick);
+wizardEyes.addEventListener('click', onWizardEyesClick);
+setupFireballWrap.addEventListener('click', onSetupFireballWrap);
