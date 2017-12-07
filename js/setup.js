@@ -119,71 +119,84 @@ var renderWizards = function (array) {
 
 renderWizards(createWizards());
 
-// document.querySelector('.setup').classList.remove('hidden');
-// document.querySelector('.setup-similar').classList.remove('hidden');
-
 
 // Начинаю выполнять задание #12 Учебный проект: одеть Надежду
 var setup = document.querySelector('.setup');
 var setupOpen = document.querySelector('.setup-open');
-var setupClose = document.querySelector('.setup-close');
-var setupWizard = document.querySelector('.setup-wizard');
+var setupClose = setup.querySelector('.setup-close');
+var setupUserName = setup.querySelector('.setup-user-name');
+var setupWizard = setup.querySelector('.setup-wizard');
 var wizardCoat = setupWizard.querySelector('.wizard-coat');
 var wizardEyes = setupWizard.querySelector('.wizard-eyes');
 var setupFireballWrap = document.querySelector('.setup-fireball-wrap');
 
-// Открываю попап с настройками
-var onSetupClick = function () {
-  setup.classList.remove('hidden');
+// Закрываю попап эскейпом
+var onSetupEscKeydown = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE && !setupUserName.focus) {
+    closeSetup();
+  }
 };
 
-var onSetupKeydown = function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    setup.classList.remove('hidden');
-  }
+// Открываю попап с настройками
+var openSetup = function () {
+  setup.classList.remove('hidden');
+  document.addEventListener('keydown', onSetupEscKeydown);
 };
 
 // Закрываю попап с настройками
-var onSetupCloseClick = function () {
+var closeSetup = function () {
   setup.classList.add('hidden');
+  document.removeEventListener('keydown', onSetupEscKeydown);
 };
 
-var onSetupCloseKeydown = function (evt) {
+setupOpen.addEventListener('click', function () {
+  openSetup();
+});
+
+setupOpen.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
-    setup.classList.add('hidden');
+    openSetup();
   }
-};
+});
 
-var onSetupEscKeydown = function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
-    setup.classList.add('hidden');
+setupClose.addEventListener('click', function () {
+  closeSetup();
+});
+
+setupClose.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    closeSetup();
   }
+});
+
+// Меняю цвет какой-нибудь штуки
+var changeColor = function (object, colors) {
+  var randomColorIndex = getRandomNumber(0, colors.length);
+  object.style.fill = colors[randomColorIndex];
 };
 
 // Меняю цвет мантии по клику
-var onWizardCoatClick = function () {
-  var randomColorIndex = getRandomNumber(0, WIZARDS_COATS_COLORS.length);
-  wizardCoat.style.fill = WIZARDS_COATS_COLORS[randomColorIndex];
-};
+wizardCoat.addEventListener('click', function () {
+  changeColor(wizardCoat, WIZARDS_COATS_COLORS);
+});
 
 // Меняю цвет глаз по клику
-var onWizardEyesClick = function () {
-  var randomColorIndex = getRandomNumber(0, WIZARDS_EYES_COLORS.length);
-  wizardEyes.style.fill = WIZARDS_EYES_COLORS[randomColorIndex];
-};
+wizardEyes.addEventListener('click', function () {
+  changeColor(wizardEyes, WIZARDS_EYES_COLORS);
+});
 
 // Меняю цвет фаербола по клику
+
+// Тут не соображу, как сделать. Пыталась добавлять в changeColor третьй параметр,чтобы можно было при вызове подставлять свойство, которое нужно изменить, но линтер ругается :\ Ниже коммент специально оставила, чтобы ты посмотрел
+
+// var changeColor = function (object, colors, property) {
+//   var randomColorIndex = getRandomNumber(0, colors.length);
+//   object.property = colors[randomColorIndex];
+// };
+
 var onSetupFireballWrap = function () {
   var randomColorIndex = getRandomNumber(0, FIREBALL_COLORS.length);
   setupFireballWrap.style.background = FIREBALL_COLORS[randomColorIndex];
 };
 
-document.addEventListener('keydown', onSetupEscKeydown);
-setupOpen.addEventListener('click', onSetupClick);
-setupOpen.addEventListener('keydown', onSetupKeydown);
-setupClose.addEventListener('click', onSetupCloseClick);
-setupClose.addEventListener('keydown', onSetupCloseKeydown);
-
-wizardCoat.addEventListener('click', onWizardCoatClick);
-wizardEyes.addEventListener('click', onWizardEyesClick);
 setupFireballWrap.addEventListener('click', onSetupFireballWrap);
