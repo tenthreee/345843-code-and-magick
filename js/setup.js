@@ -185,16 +185,8 @@ wizardEyes.addEventListener('click', function () {
 });
 
 // Меняю цвет фаербола по клику
-
-// Тут не соображу, как сделать. Пыталась добавлять в changeColor третьй параметр,чтобы можно было при вызове подставлять свойство, которое нужно изменить, но линтер ругается :\ Ниже коммент специально оставила, чтобы ты посмотрел
-
-// var changeColor = function (feature, colors, property) {
-//   feature.property = colors[getRandomNumber(0, colors.length - 1)];
-// };
-
 var onSetupFireballWrap = function () {
-  var randomColorIndex = getRandomNumber(0, FIREBALL_COLORS.length);
-  setupFireballWrap.style.background = FIREBALL_COLORS[randomColorIndex];
+  setupFireballWrap.style.background = FIREBALL_COLORS[getRandomNumber(0, FIREBALL_COLORS.length - 1)];
 };
 
 setupFireballWrap.addEventListener('click', onSetupFireballWrap);
