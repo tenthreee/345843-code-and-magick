@@ -120,7 +120,7 @@ var renderWizards = function (array) {
 renderWizards(createWizards());
 
 
-// Начинаю выполнять задание #12 Учебный проект: одеть Надежду
+// Сценарии взаимодействия пользователя с сайтом
 var setup = document.querySelector('.setup');
 var setupOpen = document.querySelector('.setup-open');
 var setupClose = setup.querySelector('.setup-close');
@@ -130,20 +130,20 @@ var wizardCoat = setupWizard.querySelector('.wizard-coat');
 var wizardEyes = setupWizard.querySelector('.wizard-eyes');
 var setupFireballWrap = document.querySelector('.setup-fireball-wrap');
 
-// Закрываю попап эскейпом
+// Попап закрывается
 var onSetupEscKeydown = function (evt) {
-  if (evt.keyCode === ESC_KEYCODE && !setupUserName.focus) {
+  if (evt.keyCode === ESC_KEYCODE && setupUserName !== document.activeElement) {
     closeSetup();
   }
 };
 
-// Открываю попап с настройками
+// Попап открывается
 var openSetup = function () {
   setup.classList.remove('hidden');
   document.addEventListener('keydown', onSetupEscKeydown);
 };
 
-// Закрываю попап с настройками
+// Попап закрывается
 var closeSetup = function () {
   setup.classList.add('hidden');
   document.removeEventListener('keydown', onSetupEscKeydown);
@@ -170,9 +170,8 @@ setupClose.addEventListener('keydown', function (evt) {
 });
 
 // Меняю цвет какой-нибудь штуки
-var changeColor = function (object, colors) {
-  var randomColorIndex = getRandomNumber(0, colors.length);
-  object.style.fill = colors[randomColorIndex];
+var changeColor = function (feature, colors) {
+  feature.style.fill = colors[getRandomNumber(0, colors.length - 1)];
 };
 
 // Меняю цвет мантии по клику
@@ -189,9 +188,8 @@ wizardEyes.addEventListener('click', function () {
 
 // Тут не соображу, как сделать. Пыталась добавлять в changeColor третьй параметр,чтобы можно было при вызове подставлять свойство, которое нужно изменить, но линтер ругается :\ Ниже коммент специально оставила, чтобы ты посмотрел
 
-// var changeColor = function (object, colors, property) {
-//   var randomColorIndex = getRandomNumber(0, colors.length);
-//   object.property = colors[randomColorIndex];
+// var changeColor = function (feature, colors, property) {
+//   feature.property = colors[getRandomNumber(0, colors.length - 1)];
 // };
 
 var onSetupFireballWrap = function () {
